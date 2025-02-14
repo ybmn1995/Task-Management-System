@@ -21,3 +21,11 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+# Visual Studio workspace and index files
+**/vs/                # Ignore the entire 'vs' directory (non-standard name)
+**/.vs/              # Standard hidden .vs directory (if it exists)
+**/*.vsidx           # All .vsidx files anywhere in the project
+**/FileContentIndex/ # Ignore the FileContentIndex folder
+**/VSWorkspaceState.json
+**/DocumentLayout.json
+**/sinx.sqlite

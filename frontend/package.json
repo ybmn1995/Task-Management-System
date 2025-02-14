@@ -15,6 +15,11 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
+  "watch": {
+    "ignored": [
+      "C:/DumpStack.log.tmp"
+    ]
+  },
   "eslintConfig": {
     "extends": [
       "react-app",
@@ -32,5 +37,9 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "webpack": "^5.98.0",
+    "webpack-cli": "^6.0.1"
   }
 }
