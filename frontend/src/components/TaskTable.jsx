@@ -2,7 +2,8 @@
 import React, { useState, useEffect } from 'react';
 import { getTasks, addTask, updateTask, deleteTask } from '../api/taskService';
 import { motion } from 'framer-motion';
-import { Button, Input, Card } from './ui'; // Corrected import path
+import { Button, Input, Card } from '/ui';  // ✅ Fix the import path
+
 const TaskManager = () => {
     const [tasks, setTasks] = useState([]);
     const [newTask, setNewTask] = useState('');

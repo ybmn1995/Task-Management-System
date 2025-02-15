@@ -1,14 +1,16 @@
-
-// src/App.js (Main Entry Point)
 import React from 'react';
-import TaskManager from './components/TaskManager';
+import Home from './components/Home';
+import TaskTable from './components/TaskTable';
+import CreateTaskForm from './components/CreateTaskForm';
 
-function App() {
+const App = () => {
     return (
-        <div className="App">
-            <TaskManager />
+        <div>
+            <Home />
+            <CreateTaskForm />
+            <TaskTable />
         </div>
     );
-}
+};
 
 export default App;
