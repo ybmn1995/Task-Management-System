@@ -5,9 +5,9 @@ import TodoItem from "./TodoItem";
 import { AnimatePresence, motion } from "framer-motion";
 
 const filterOptions = [
-  { type: "nonCompleted", label: "Non-Completed", color: "#FF5733" },
-  { type: "completed", label: "Completed", color: "#33FF57" },
-  { type: "all", label: "All", color: "#3380FF" },
+  { type: "nonCompleted", label: "Non-Completed", color: "#E74C3C" },
+  { type: "completed", label: "Completed", color: "#2ECC71" },
+  { type: "all", label: "All", color: "#3498DB" },
 ];
 
 const DisplayTodos = () => {
@@ -56,7 +56,7 @@ const DisplayTodos = () => {
             whileTap={{ scale: 0.9 }}
             onClick={() => setSort(type)}
             style={{
-              backgroundColor: sort === type ? color : "lightgray",
+              backgroundColor: sort === type ? color : "#BDC3C7",
               color: sort === type ? "white" : "black",
               border: `2px solid ${color}`,
               padding: "8px 12px",
