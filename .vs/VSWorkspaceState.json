@@ -4,9 +4,8 @@
     "\\backend",
     "\\frontend",
     "\\frontend\\src",
-    "\\frontend\\src\\api",
     "\\frontend\\src\\components"
   ],
-  "SelectedNode": "\\backend\\.gitignore",
+  "SelectedNode": "\\frontend\\package.json",
   "PreviewInSolutionExplorer": false
 }
