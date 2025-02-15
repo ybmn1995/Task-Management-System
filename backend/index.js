@@ -33,7 +33,7 @@ app.use('/tasks', authMiddleware, tasksRouter);
 
 app.listen(config.port, () => {
   console.log(`✅ Server is running at http://localhost:${config.port}`);
-  console.log(`📄 Swagger API Docs: http://localhost:${config.port}/api-docs`);
+  console.log(`📄 Swagger API Docs: http://localhost:${config.port}/swagger`);
 });
 
 
