@@ -1,5 +1,5 @@
 {
-  "name": "redux-todo",
+  "name": "frontend",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -40,5 +40,22 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+
+  "engines": {
+  "node": "16.x"
+},  
+"browser": {
+  "path": "path-browserify",
+  "os": "os-browserify/browser",
+  "crypto": "crypto-browserify",
+  "stream": "stream-browserify",
+  "buffer": "buffer/"
+}
+
+,
+  "devDependencies": {
+    "webpack": "^5.98.0",
+    "webpack-cli": "^6.0.1"
   }
 }
