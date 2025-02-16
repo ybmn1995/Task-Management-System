@@ -41,6 +41,10 @@ export const removeTodo = createAsyncThunk("todos/removeTodo", async (id) => {
 export const updateTodo = createAsyncThunk("todos/updateTodo", async (task) => {
   try {
     console.log("Updating task:", task);
+
+    // Convert completed value to boolean: 1 -> true, else -> false
+    task.completed = task.completed === 1 || task.completed === true ? true : false;
+
     const response = await axiosInstance.put(`/${task.id}`, task);
     console.log("Response from API:", response);
 
@@ -54,6 +58,7 @@ export const updateTodo = createAsyncThunk("todos/updateTodo", async (task) => {
     throw new Error(`Failed to update the task. ${error.message || error}`);
   }
 });
+
 
 const initialState = {
   todos: [],

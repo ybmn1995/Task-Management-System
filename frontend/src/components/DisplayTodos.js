@@ -36,6 +36,8 @@ const DisplayTodos = () => {
   const handleUpdate = (task) => {
     const updatedTask = { ...task };
     dispatch(updateTodo(updatedTask));
+    handleRefresh();
+
   };
 
   const handleRefresh = () => {
@@ -72,7 +74,7 @@ const DisplayTodos = () => {
       </div>
 
       {/* Task List */}
-      <ul style={{ maxHeight: "400px", overflowY: "auto" }} onClick={handleRefresh}>
+      <ul style={{ maxHeight: "400px", overflowY: "auto" }}>
         <AnimatePresence>
           {filteredTodos.length > 0 ? (
             filteredTodos.map((item) => (
@@ -81,6 +83,7 @@ const DisplayTodos = () => {
                 item={item}
                 onRemove={handleDelete}
                 onUpdate={handleUpdate}
+                onClick={handleRefresh}
               />
             ))
           ) : (

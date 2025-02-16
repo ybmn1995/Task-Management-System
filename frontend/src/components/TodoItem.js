@@ -6,8 +6,8 @@ import { IoCheckmarkDoneSharp, IoClose } from "react-icons/io5";
 const TodoItem = (props) => {
   const { item, onUpdate, onRemove } = props;
 
-  const titleRef = useRef(true); // Ref for the title input
-  const descriptionRef = useRef(true); // Ref for the description input
+  const titleRef = useRef(null); // Ref for the title input
+  const descriptionRef = useRef(null); // Ref for the description input
 
   const [task, setTask] = useState(item); // Manage task locally
 
@@ -15,40 +15,33 @@ const TodoItem = (props) => {
     setTask(item); // Update local state when props change
   }, [item]);
 
-  const changeFocus = (field) => {
-    // Enable the input for title or description based on the field passed
-    if (field === "title") {
-      titleRef.current.disabled = false;
-      titleRef.current.focus();
-    } else if (field === "description") {
-      descriptionRef.current.disabled = false;
-      descriptionRef.current.focus();
-    }
-  };
+  const updateBothFields = () => {
+    const updatedTask = {
+      ...task,
+      title: titleRef.current.value,
+      description: descriptionRef.current.value,
+    };
 
-  const update = (field, id, value, e) => {
-    if (e.which === 13) {
-      const updatedTask = { ...item, [field]: value };
-      setTask(updatedTask);
-      onUpdate(updatedTask); // Pass updated task to the onUpdate handler
-      if (field === "title") {
-        titleRef.current.disabled = true;
-      } else if (field === "description") {
-        descriptionRef.current.disabled = true;
-      }
-    }
+    setTask(updatedTask); // Update local state
+    onUpdate(updatedTask); // Send updated task to the parent component
+
+    // Disable inputs after updating
+    titleRef.current.disabled = true;
+    descriptionRef.current.disabled = true;
   };
 
   const toggleComplete = () => {
     console.log("Button clicked!");
 
     const updatedTask = {
-      ...item,
-      completed: !item.completed, // Toggle the boolean value
+      ...task,
+      completed: !task.completed, // Toggle completion status
     };
+
     setTask(updatedTask);
     onUpdate(updatedTask); // Pass the updated task to onUpdate
   };
+
   return (
     <motion.li
       initial={{ x: "150vw", transition: { type: "spring", duration: 2 } }}
@@ -63,48 +56,46 @@ const TodoItem = (props) => {
         transition: { duration: 0.5 },
         backgroundColor: "rgba(255,0,0,1)",
       }}
-      key={item.id}
+      key={task.id}
       className="card"
     >
       <div className="todo-item">
         {/* Title Input */}
         <textarea
           ref={titleRef}
-          disabled={!titleRef.current} // Disable when not in edit mode
           value={task.title} // Bind to local task state
           onChange={(e) => setTask({ ...task, title: e.target.value })} // Update title in local state
-          onKeyPress={(e) =>
-            update("title", item.id, titleRef.current.value, e)
-          }
         />
         {/* Description Input */}
         <textarea
           ref={descriptionRef}
-          disabled={!descriptionRef.current} // Disable when not in edit mode
           value={task.description} // Bind to local task state
           onChange={(e) => setTask({ ...task, description: e.target.value })} // Update description in local state
-          onKeyPress={(e) =>
-            update("description", item.id, descriptionRef.current.value, e)
-          }
         />
       </div>
       <div className="btns">
+        {/* Update Button - Updates title & description */}
         <motion.button
           whileHover={{ scale: 1.4 }}
           whileTap={{ scale: 0.9 }}
-          onClick={() => changeFocus("title")}
+          onClick={updateBothFields}
         >
           <AiFillEdit />
         </motion.button>
+
+        {/* Toggle Completion Button */}
         <motion.button
           whileHover={{ scale: 1.4 }}
           whileTap={{ scale: 0.9 }}
           style={{ color: "green" }}
           hidden={task.completed}
-          onClick={toggleComplete} // Toggle completion status
+          onClick={toggleComplete } // Toggle completion status
+          
         >
           <IoCheckmarkDoneSharp />
         </motion.button>
+
+        {/* Remove Task Button */}
         <motion.button
           whileHover={{ scale: 1.4 }}
           whileTap={{ scale: 0.9 }}
