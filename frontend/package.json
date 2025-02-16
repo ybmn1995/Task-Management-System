@@ -27,11 +27,7 @@
      "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
-  "devDependencies": {
-    "cross-env": "^7.0.3",
-    "craco": "^7.1.0",
-    "typescript": "^5.4.2"
-  },
+ 
   "resolutions": {
     "@babel/core": "^7.16.0",
     "babel-loader": "^8.2.3",
