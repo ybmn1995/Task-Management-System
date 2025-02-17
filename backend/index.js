@@ -9,28 +9,18 @@ const config = require('./config');
 
 const app = express();
 
-// ✅ Fix CORS Issues
-const corsOptions = {
-  origin: function (origin, callback) {
-    callback(null, true); // Allow all origins dynamically
-  },
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'x-api-key'],
-  credentials: false, // Must be false when using '*' as origin
-};
-
-// Apply CORS Middleware Properly
-app.use(cors(corsOptions));
-app.options('*', (req, res) => {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, x-api-key');
-  res.sendStatus(204); // Respond with 'No Content' for preflight requests
-});
-
+// ✅ CORS Configuration
+app.use(cors({ origin: '*' }));
 app.use(express.json());
 
-// ✅ Swagger Configuration (Works for Local and Render Deployment)
+// ✅ Function to Get Dynamic Base URL
+const getServerUrl = (req) => {
+  const protocol = req.protocol; // 'http' or 'https'
+  const host = req.get('host'); // Current host (localhost:5000 or Render URL)
+  return `${protocol}://${host}`;
+};
+
+// ✅ Swagger Configuration (Dynamic URL)
 const swaggerOptions = {
   definition: {
     openapi: '3.0.0',
@@ -39,16 +29,17 @@ const swaggerOptions = {
       version: '1.0.0',
       description: 'API documentation for Task Management System',
     },
-    servers: [
-      { url: `http://localhost:${config.port}` }, // Local Development
-      { url: 'https://task-management-system-kwt1.onrender.com' }, // Render Deployment
-    ],
   },
-  apis: ['./routes/*.js'],
+  apis: ['./routes/*.js'], // Ensure Swagger scans all route files
 };
 
 const swaggerDocs = swaggerJsDoc(swaggerOptions);
-app.use('/swagger', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
+
+// Middleware to Dynamically Set the Server URL for Swagger UI
+app.use('/swagger', (req, res, next) => {
+  swaggerDocs.servers = [{ url: getServerUrl(req) }];
+  next();
+}, swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 // ✅ Apply Authentication Middleware
 app.use('/tasks', authMiddleware, tasksRouter);
@@ -56,8 +47,12 @@ app.use('/tasks', authMiddleware, tasksRouter);
 // ✅ Error Handling Middleware
 app.use(errorHandler);
 
-// ✅ Start Server
+// ✅ Start Server with Dynamic URL Logging
 app.listen(config.port, () => {
-  console.log(`✅ Server is running at http://localhost:${config.port}`);
-  console.log(`📄 Swagger API Docs: http://localhost:${config.port}/swagger`);
+  const protocol = process.env.RENDER ? 'https' : 'http';
+  const host = process.env.RENDER ? `task-management-system-kwt1.onrender.com` : `localhost:${config.port}`;
+  const serverUrl = `${protocol}://${host}`;
+
+  console.log(`✅ Server is running at ${serverUrl}`);
+  console.log(`📄 Swagger API Docs: ${serverUrl}/swagger`);
 });
