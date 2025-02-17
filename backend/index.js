@@ -9,21 +9,26 @@ const config = require('./config');
 
 const app = express();
 
+// ✅ Fix CORS Issues
 const corsOptions = {
-  origin: function (origin, callback) {
-    callback(null, true); // Allows all origins dynamically
-  },
+  origin: '*', // Allow all origins
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'x-api-key'],
-  credentials: true, // Allows credentials (cookies, authentication headers, etc.)
+  credentials: false, // Must be false if using `origin: '*'`
 };
 
+// Apply CORS middleware properly
 app.use(cors(corsOptions));
-app.options('*', cors(corsOptions)); // Handle preflight requests
+app.options('*', (req, res) => {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, x-api-key');
+  res.sendStatus(204); // Respond with 'No Content' for preflight requests
+});
 
 app.use(express.json());
 
-// Swagger Configuration
+// ✅ Swagger Configuration
 const swaggerOptions = {
   definition: {
     openapi: '3.0.0',
@@ -40,13 +45,13 @@ const swaggerOptions = {
 const swaggerDocs = swaggerJsDoc(swaggerOptions);
 app.use('/swagger', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
-// Apply Authentication Middleware
+// ✅ Apply Authentication Middleware
 app.use('/tasks', authMiddleware, tasksRouter);
 
-// Error Handling Middleware
+// ✅ Error Handling Middleware
 app.use(errorHandler);
 
-// Start Server
+// ✅ Start Server
 app.listen(config.port, () => {
   console.log(`✅ Server is running at http://localhost:${config.port}`);
   console.log(`📄 Swagger API Docs: http://localhost:${config.port}/swagger`);
