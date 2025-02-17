@@ -11,13 +11,15 @@ const app = express();
 
 // ✅ Fix CORS Issues
 const corsOptions = {
-  origin: '*', // Allow all origins
+  origin: function (origin, callback) {
+    callback(null, true); // Allow all origins dynamically
+  },
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'x-api-key'],
-  credentials: false, // Must be false if using `origin: '*'`
+  credentials: false, // Must be false when using '*' as origin
 };
 
-// Apply CORS middleware properly
+// Apply CORS Middleware Properly
 app.use(cors(corsOptions));
 app.options('*', (req, res) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -28,7 +30,7 @@ app.options('*', (req, res) => {
 
 app.use(express.json());
 
-// ✅ Swagger Configuration
+// ✅ Swagger Configuration (Works for Local and Render Deployment)
 const swaggerOptions = {
   definition: {
     openapi: '3.0.0',
@@ -37,7 +39,10 @@ const swaggerOptions = {
       version: '1.0.0',
       description: 'API documentation for Task Management System',
     },
-    servers: [{ url: `http://localhost:${config.port}` }],
+    servers: [
+      { url: `http://localhost:${config.port}` }, // Local Development
+      { url: 'https://task-management-system-kwt1.onrender.com' }, // Render Deployment
+    ],
   },
   apis: ['./routes/*.js'],
 };
